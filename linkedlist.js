@@ -13,15 +13,18 @@ class LinkedList {
 
 		this.head = new Node(data[0]);
 		let previous = this.head;
+		this.tail = this.head;
 		let newNode;
 
-		for (let i = 1, len = data.length; i < len; i++) {
-			newNode = new Node(data[i]);
-			previous.nextNode = newNode;
-			previous = newNode;
-		}
+		if (data.length > 1) {
+			for (let i = 1, len = data.length; i < len; i++) {
+				newNode = new Node(data[i]);
+				previous.nextNode = newNode;
+				previous = newNode;
+			}
 
-		this.tail = newNode;
+			this.tail = newNode;
+		}
 	}
 
 	readNode(index) {
@@ -37,7 +40,7 @@ class LinkedList {
 			counter++;
 		}
 
-		return currentHead.data;
+		return currentHead;
 	}
 
 	insert(data, index) {
@@ -75,8 +78,6 @@ class LinkedList {
 		const newNode = new Node(data);
 		this.tail.nextNode = newNode;
 		this.tail = newNode;
-
-		console.log(this.tail);
 	}
 
 	// should be O(n), ran it in place
