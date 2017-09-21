@@ -1,4 +1,5 @@
 const LinkedList = require("./linkedlist");
+const dictionary = require("./dictionary.json");
 
 class HashTable {
   constructor(length) {
@@ -29,6 +30,7 @@ class HashTable {
     let counter = 0;
 
     for (let i = 0; i < 26; i++) {
+      counter = 0;
       if (this.buckets[i]) {
         let node = this.buckets[i].readNode(counter);
         console.log(node.data);
@@ -41,19 +43,41 @@ class HashTable {
     }
   }
 
-  define() {}
+  define(word) {
+    let counter = 0;
+    let index = this.hash(word);
+    if (!this.buckets[index]) return console.log("not found :)");
+    let node;
+    do {
+      node = this.buckets[index].readNode(counter);
+      if (node.data[0] === word)
+        return console.log(node.data[1], "\nNodes traversed: ", counter + 1);
+      counter++;
+    } while (node.nextNode);
+    console.log("not found :)");
+    console.log("Nodes traversed: ", counter + 1);
+  }
 }
 
 const testHash = new HashTable(26);
 
-testHash.insert("Dalphabet", "an alphabet starting with D");
+// testHash.insert("Dalphabet", "an alphabet starting with D");
+//
+// testHash.insert(
+//   "Xyzygy",
+//   "I don't know what this means but I'm pretty sure it's a word"
+// );
+// testHash.insert("alphabet", "an alphabet");
+// testHash.insert("recursion", "see recursion");
+// testHash.insert("aaaaaa", "a sarcastic scream");
 
-testHash.insert(
-  "Xyzygy",
-  "I don't know what this means but I'm pretty sure it's a word"
-);
-testHash.insert("alphabet", "an alphabet");
-testHash.insert("recursion", "see recursion");
-testHash.insert("aaaaaa", "a sarcastic scream");
+Object.entries(dictionary).forEach(entry => {
+  testHash.insert(entry[0], entry[1]);
+});
 
 testHash.renderList();
+
+testHash.define("cat");
+testHash.define("aaaaaa");
+testHash.define("absolutely");
+testHash.define("bats");
