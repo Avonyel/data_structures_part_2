@@ -18,6 +18,7 @@ class HashTable {
 
   insert(word, definition) {
     const index = this.hash(word);
+    word = word.toLowerCase();
 
     if (this.buckets[index]) {
       this.buckets[index].append([word, definition]);
@@ -44,6 +45,7 @@ class HashTable {
   }
 
   define(word) {
+    word = word.toLowerCase();
     let counter = 0;
     let index = this.hash(word);
     if (!this.buckets[index]) return console.log("not found :)");
@@ -75,9 +77,4 @@ Object.entries(dictionary).forEach(entry => {
   testHash.insert(entry[0], entry[1]);
 });
 
-testHash.renderList();
-
-testHash.define("cat");
-testHash.define("aaaaaa");
-testHash.define("absolutely");
-testHash.define("bats");
+testHash.define("CAT");
