@@ -6,17 +6,22 @@ class Node {
 }
 
 class LinkedList {
-	constructor(nodes) {
-		if (!Array.isArray(nodes)) {
+	constructor(data) {
+		if (!Array.isArray(data)) {
 			throw new Error("You must pass in an array of Nodes");
 		}
 
-		this.head = nodes[0];
-		this.tail = nodes[nodes.length - 1];
+		this.head = new Node(data[0]);
+		let previous = this.head;
+		let newNode;
 
-		for (let i = 0, len = nodes.length - 1; i < len; i++) {
-			nodes[i].nextNode = nodes[i + 1];
+		for (let i = 1, len = data.length; i < len; i++) {
+			newNode = new Node(data[i]);
+			previous.nextNode = newNode;
+			previous = newNode;
 		}
+
+		this.tail = newNode;
 	}
 
 	readNode(index) {
@@ -62,6 +67,16 @@ class LinkedList {
 
 		newNode.nextNode = previous.nextNode;
 		previous.nextNode = newNode;
+
+		if (!newNode.nextNode) this.tail = newNode;
+	}
+
+	append(data) {
+		const newNode = new Node(data);
+		this.tail.nextNode = newNode;
+		this.tail = newNode;
+
+		console.log(this.tail);
 	}
 
 	// should be O(n), ran it in place
@@ -82,21 +97,26 @@ class LinkedList {
 	}
 }
 
-const node = new Node("hello");
-const node1 = new Node("hello1");
-const node2 = new Node("hello2");
-const node3 = new Node("hello3");
+// const linkedList = new LinkedList(["hello", "hello1", "hello2", "hello3"]);
 
-const linkedList = new LinkedList([node, node1, node2, node3]);
+// console.log(linkedList.readNode(0));
+// console.log(linkedList.readNode(1));
+// console.log(linkedList.readNode(2));
+// console.log(linkedList.readNode(3));
 
-console.log(linkedList.readNode(0));
-console.log(linkedList.readNode(1));
-console.log(linkedList.readNode(2));
-console.log(linkedList.readNode(3));
+// linkedList.insert("goodbye", 4);
+// linkedList.reverse();
 
-linkedList.reverse();
+// console.log(linkedList.readNode(0));
+// console.log(linkedList.readNode(1));
+// console.log(linkedList.readNode(2));
+// console.log(linkedList.readNode(3));
+// console.log(linkedList.readNode(4));
 
-console.log(linkedList.readNode(0));
-console.log(linkedList.readNode(1));
-console.log(linkedList.readNode(2));
-console.log(linkedList.readNode(3));
+// linkedList.append("wheeeee");
+// linkedList.append("whatevs");
+
+// console.log(linkedList.readNode(5));
+// console.log(linkedList.readNode(6));
+
+module.exports = LinkedList;
