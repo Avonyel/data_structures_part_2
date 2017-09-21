@@ -2,7 +2,7 @@ const LinkedList = require("./linkedlist");
 const dictionary = require("./dictionary.json");
 
 class HashTable {
-  constructor(tuning = 50, buckets = 50) {
+  constructor(tuning = 15, buckets = 20) {
     this.buckets = new Array(buckets);
     this.tuning = tuning;
     this.entries = 0;
@@ -10,6 +10,7 @@ class HashTable {
 
   balance() {
     if (!(this.entries / this.buckets.length > this.tuning)) return;
+    console.log("balancing");
     const currentBuckets = this.renderList();
     this.buckets = new Array(this.buckets.length * 2);
 
@@ -22,9 +23,12 @@ class HashTable {
 
   hash(input) {
     return (
-      input.split("").reduce((sum, letter) => {
-        return sum + letter.charCodeAt(0) - 64;
-      }, 0) % this.buckets.length
+      ((input.split("").reduce((sum, letter) => {
+        return sum + letter.charCodeAt(0);
+      }, 0) +
+        input.charCodeAt(0)) *
+        input.charCodeAt(input.length - 1)) %
+      this.buckets.length
     );
   }
 
@@ -40,6 +44,7 @@ class HashTable {
       this.buckets[index] = new LinkedList([[word, definition]]);
     }
     this.entries++;
+
     this.balance();
   }
 
@@ -80,7 +85,7 @@ class HashTable {
   }
 }
 
-const testHash = new HashTable();
+const testHash = new HashTable(15, 50);
 
 // testHash.insert("Dalphabet", "an alphabet starting with D");
 //
@@ -96,6 +101,12 @@ Object.entries(dictionary).forEach(entry => {
   testHash.insert(entry[0], entry[1]);
 });
 
-testHash.define("CAT");
-testHash.define("test");
+testHash.define("asdfadfhk");
+testHash.define("bsdfadfhk");
+testHash.define("csdfadfhk");
+testHash.define("dsdfadfhk");
+testHash.define("esdfadfhk");
+testHash.define("fsdfadfhk");
+testHash.define("gsdfadfhk");
+testHash.define("hsdfadfhk");
 testHash.define("inlsdkjf;alkj");
