@@ -6,9 +6,23 @@ class HashTable {
     this.buckets = new Array(buckets);
     this.tuning = tuning;
     this.entries = 0;
+    this.counters = {
+      balance: 0,
+      hash: 0,
+      insert: 0,
+      renderList: 0,
+      define: 0
+    };
+  }
+
+  tic(methodName) {
+    return console.log(
+      `${methodName} took ${this.counters[methodName]} operations`
+    );
   }
 
   balance() {
+    this.counters.balance = 0;
     if (!(this.entries / this.buckets.length > this.tuning)) return;
     console.log("balancing");
     const currentBuckets = this.renderList();
@@ -16,23 +30,29 @@ class HashTable {
 
     currentBuckets.forEach(bucket => {
       this.insert(bucket[0], bucket[1]);
+      this.counters.balance++;
     });
 
     console.log("Balancing: ", this.buckets.length, " buckets");
+    this.tic("balance");
   }
 
   hash(input) {
+    this.counters.hash = 0;
     return (
-      ((input.split("").reduce((sum, letter) => {
+      (input.split("").reduce((sum, letter) => {
         return sum + letter.charCodeAt(0);
       }, 0) +
         input.charCodeAt(0)) *
-        input.charCodeAt(input.length - 1)) %
+      input.charCodeAt(input.length - 1) %
       this.buckets.length
     );
+    this.counters.hash++;
+    this.tic("hash");
   }
 
   insert(word, definition) {
+    this.counters.insert = 0;
     if (typeof word[0] !== "string") return console.log("strings only");
     word = word.toLowerCase();
 
@@ -46,18 +66,23 @@ class HashTable {
     this.entries++;
 
     this.balance();
+    this.counters.insert++;
+    // this.tic("insert");
   }
 
   renderList() {
+    this.counters.renderList = 0;
     let counter = 0;
     let giantArray = [];
 
     for (let i = 0; i < this.buckets.length; i++) {
       counter = 0;
+      this.counters.renderList++;
       if (this.buckets[i]) {
         let node = this.buckets[i].readNode(counter);
         giantArray.push(node.data);
         while (node.nextNode) {
+          this.counters.renderList++;
           counter++;
           node = this.buckets[i].readNode(counter);
           giantArray.push(node.data);
@@ -65,10 +90,12 @@ class HashTable {
       }
     }
 
+    this.tic("renderList");
     return giantArray;
   }
 
   define(word) {
+    this.counters.define = 0;
     word = word.toLowerCase();
     let counter = 0;
     let index = this.hash(word);
@@ -82,6 +109,8 @@ class HashTable {
     } while (node.nextNode);
     console.log("not found :)");
     console.log("Nodes traversed: ", counter + 1);
+    this.counters.define = counter;
+    this.tic("define");
   }
 }
 
