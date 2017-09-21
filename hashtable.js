@@ -2,23 +2,22 @@ const LinkedList = require("./linkedlist");
 const dictionary = require("./dictionary.json");
 
 class HashTable {
-  constructor(length) {
-    this.buckets = new Array(length);
+  constructor() {
+    this.buckets = [];
   }
 
   hash(input) {
-    //assume input is a string
-    //take char code at first
     let first = input.charCodeAt(0);
-    if (first > 90) first -= 32;
-    return (first -= 65);
-
-    //check if in buckets, else add
+    return (first -= 97);
   }
 
   insert(word, definition) {
-    const index = this.hash(word);
+    if (typeof word[0] !== "string") return console.log("strings only");
     word = word.toLowerCase();
+    if (word.charCodeAt(0) < 97 || word.charCodeAt(0) > 122)
+      return console.log("no numbers or special chars allowed", word);
+
+    const index = this.hash(word);
 
     if (this.buckets[index]) {
       this.buckets[index].append([word, definition]);
@@ -30,7 +29,7 @@ class HashTable {
   renderList() {
     let counter = 0;
 
-    for (let i = 0; i < 26; i++) {
+    for (let i = 0; i < this.buckets.length; i++) {
       counter = 0;
       if (this.buckets[i]) {
         let node = this.buckets[i].readNode(counter);
@@ -78,3 +77,5 @@ Object.entries(dictionary).forEach(entry => {
 });
 
 testHash.define("CAT");
+testHash.define("test");
+testHash.define("inlsdkjf;alkj");
