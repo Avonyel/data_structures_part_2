@@ -22,9 +22,7 @@ class HashTable {
   }
 
   balance() {
-    this.counters.balance = 0;
     if (!(this.entries / this.buckets.length > this.tuning)) return;
-    console.log("balancing");
     const currentBuckets = this.renderList();
     this.buckets = new Array(this.buckets.length * 2);
 
@@ -33,18 +31,18 @@ class HashTable {
       this.counters.balance++;
     });
 
-    console.log("Balancing: ", this.buckets.length, " buckets");
     this.tic("balance");
+    this.counters.balance = 0;
   }
 
   hash(input) {
     this.counters.hash = 0;
     return (
-      (input.split("").reduce((sum, letter) => {
+      ((input.split("").reduce((sum, letter) => {
         return sum + letter.charCodeAt(0);
       }, 0) +
         input.charCodeAt(0)) *
-      input.charCodeAt(input.length - 1) %
+        input.charCodeAt(input.length - 1)) %
       this.buckets.length
     );
     this.counters.hash++;
@@ -52,7 +50,6 @@ class HashTable {
   }
 
   insert(word, definition) {
-    this.counters.insert = 0;
     if (typeof word[0] !== "string") return console.log("strings only");
     word = word.toLowerCase();
 
@@ -66,8 +63,6 @@ class HashTable {
     this.entries++;
 
     this.balance();
-    this.counters.insert++;
-    // this.tic("insert");
   }
 
   renderList() {
@@ -114,10 +109,24 @@ class HashTable {
   }
 }
 
-const testHash = new HashTable(15, 50);
+// const testHash = new HashTable(20, 50);
+
+// Object.entries(dictionary).forEach(entry => {
+//   testHash.insert(entry[0], entry[1]);
+// });
+
+// testHash.define("asdfadfhk");
+// testHash.define("bsdfadfhk");
+// testHash.define("csdfadfhk");
+// testHash.define("dsdfadfhk");
+// testHash.define("esdfadfhk");
+// testHash.define("fsdfadfhk");
+// testHash.define("gsdfadfhk");
+// testHash.define("hsdfadfhk");
+// testHash.define("inlsdkjf;alkj");
 
 // testHash.insert("Dalphabet", "an alphabet starting with D");
-//
+
 // testHash.insert(
 //   "Xyzygy",
 //   "I don't know what this means but I'm pretty sure it's a word"
@@ -126,16 +135,9 @@ const testHash = new HashTable(15, 50);
 // testHash.insert("recursion", "see recursion");
 // testHash.insert("aaaaaa", "a sarcastic scream");
 
-Object.entries(dictionary).forEach(entry => {
-  testHash.insert(entry[0], entry[1]);
-});
+// testHash.renderList();
+// testHash.renderList();
+// testHash.renderList();
+// testHash.renderList();
 
-testHash.define("asdfadfhk");
-testHash.define("bsdfadfhk");
-testHash.define("csdfadfhk");
-testHash.define("dsdfadfhk");
-testHash.define("esdfadfhk");
-testHash.define("fsdfadfhk");
-testHash.define("gsdfadfhk");
-testHash.define("hsdfadfhk");
-testHash.define("inlsdkjf;alkj");
+module.exports = HashTable;
